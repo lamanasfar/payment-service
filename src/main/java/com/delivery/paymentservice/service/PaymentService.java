@@ -67,6 +67,10 @@ public class PaymentService {
         log.info("Payment completed for orderId: {}", event.getOrderId());
     }
 
+    public static void yest(){
+
+    }
+
     private void createBalanceIfNotExists(Long courierId) {
         courierBalanceRepository.findByCourierId(courierId).orElseGet(() -> {
             var balance = CourierBalanceEntity.builder()
