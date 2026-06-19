@@ -20,19 +20,13 @@ public class PaymentService {
     private final PaymentRepository  paymentRepository;
     private final CourierBalanceRepository courierBalanceRepository;
 
-    private static final BigDecimal EARNING_RATE = new BigDecimal("0.75");
+    private static final BigDecimal EARNING_RATE = new BigDecimal("0.70");
 
     public void createPaymentRecord(OrderEvent orderEvent) {
-        var courierEarning = orderEvent.getPrice().multiply(EARNING_RATE);
+        var totalAmount = orderEvent.getPrice();
+        var courierEarning = totalAmount.multiply(EARNING_RATE);
+        var platformFee = totalAmount.subtract(courierEarning);
 
-//        PaymentDto dto =
-//                PaymentMapper.fromOrderEvent(
-//                        orderEvent,
-//                        courierEarning);
-//
-//        paymentRepository.save(
-//                PaymentMapper.toEntity(dto)
-//        );
         var paymentEntity = PaymentEntity.builder()
                 .orderId(orderEvent.getOrderId())
                 .courierId(orderEvent.getCourierId())
@@ -40,6 +34,7 @@ public class PaymentService {
                 .courierEarning(courierEarning)
                 .status(PaymentStatus.PENDING)
                 .createdAt(LocalDateTime.now())
+                .platformFee(platformFee)
                 .build();
         paymentRepository.save(paymentEntity);
         log.info("Payment created: {}", orderEvent.getOrderId());
@@ -67,9 +62,7 @@ public class PaymentService {
         log.info("Payment completed for orderId: {}", event.getOrderId());
     }
 
-    public static void yest(){
 
-    }
 
     private void createBalanceIfNotExists(Long courierId) {
         courierBalanceRepository.findByCourierId(courierId).orElseGet(() -> {
