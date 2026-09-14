@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-platform-fee-column
+      author: laman
+      changes:
+        - addColumn:
+            tableName: payment_table
+            columns:
+              - column:
+                  name: platform_fee
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+                  defaultValueNumeric: 0

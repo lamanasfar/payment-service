@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
+
 @Entity
 @Table(name = "courier_balances")
 @Getter
@@ -23,5 +25,8 @@ public class CourierBalanceEntity {
 
     @Column(nullable = false)
     private BigDecimal turnover;//bu deyismeyecek
+
+    @OneToMany(mappedBy = "courierBalance", cascade = CascadeType.ALL)
+    private List<WithdrawalEntity> withdrawals;
 }
 

@@ -41,4 +41,7 @@ public class PaymentEntity {
 
     @Column
     private LocalDateTime completedAt;
+
+    @Column
+    private BigDecimal platformFee;
 }
